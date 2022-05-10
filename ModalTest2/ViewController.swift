@@ -8,79 +8,52 @@
 import UIKit
 import SwiftUI
 
-// MARK: Normal Loop presenting device vc
-
-//class MainViewController: UINavigationController {
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//    }
-//
-//    override func viewDidAppear(_ animated: Bool) {
-//        let modal = DeviceManagerVC()
-//        present(modal, animated: true)
-//    }
-//}
-
-
-// MARK: Onboarding presenting device vc
-
-struct MainOnboardingFlow: View {
+struct MainView: View {
     @State private var presented: Bool = false
-    var topLevelNavigationView: Bool
 
     var body: some View {
-        if topLevelNavigationView {
-            // .navigationBarHidden(true) is *not* respected in this case on iOS 15
-            NavigationView {
-                content
+        NavigationView {
+            VStack {
+                Text("Main Content")
+                    .sheet(isPresented: $presented) { ModalViewWrapper() }
+                Button("Show Modal Sheet") { presented = true }
+                Spacer()
             }
-        } else {
-            // .navigationBarHidden(true) is respected in this case
-            content
-        }
-    }
-
-    var content: some View {
-        VStack {
-            Text("Onboarding")
-                .sheet(isPresented: $presented) { DeviceOnboardingWrapper() }
-            Button("Onboard Device") { presented = true }
-            Spacer()
+            .navigationTitle("Main Nav Bar")
         }
     }
 }
 
-struct DeviceOnboardingWrapper: UIViewControllerRepresentable {
+struct ModalViewWrapper: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
 
     func makeUIViewController(context: Context) -> UIViewController {
-        return DeviceManagerVC()
+        return ModalNavController()
     }
 }
 
-
-
-// MARK: Device VC
-
-class DeviceManagerVC: UINavigationController {
+class ModalNavController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let vc = UIHostingController(rootView: FirstDeviceScreen())
+        let vc = UIHostingController(rootView: ModalContentView())
         pushViewController(vc, animated: false)
     }
 }
 
-struct FirstDeviceScreen: View {
+struct ModalContentView: View {
+    @State private var hideNavBar: Bool = false
+
     var body: some View {
         VStack {
-            Text("First Device Screen")
+            Text("ModalContentView content")
+                .padding()
+            Button("Toggle Nav Bar") { hideNavBar.toggle() }
             Spacer()
         }
-        .navigationBarHidden(true)
+        .navigationTitle("ModalContentView")
+        .navigationBarHidden(hideNavBar)
     }
 }
 

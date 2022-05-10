@@ -18,11 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.windowScene = windowScene
 
-        //window?.rootViewController = MainViewController()    // Main loop presenting device vc
-
-        let mainView = MainOnboardingFlow(topLevelNavigationView: true)
-
-        window?.rootViewController = UIHostingController(rootView: mainView)    // Onboarding
+        window?.rootViewController = UIHostingController(rootView: MainView())    // Onboarding
 
         window?.makeKeyAndVisible()
     }
